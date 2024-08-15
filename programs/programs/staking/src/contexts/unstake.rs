@@ -97,14 +97,6 @@ impl<'info> Unstake<'info> {
             token_program,
         };
 
-        ThawDelegatedAccountCpi::new(&metadata_program, cpi_accounts).invoke()?;
-
-        let cpi_program = self.token_program.to_account_info();
-        let cpi_accounts = Revoke {
-            authority: self.stake_account.to_account_info(),
-            source: self.mint_ata.to_account_info(),
-        };
-
         let signer_seeds = &[
             b"stake".as_ref(),
             mint.to_account_info().key.as_ref(),
@@ -114,7 +106,15 @@ impl<'info> Unstake<'info> {
 
         let signer = &[&signer_seeds[..]];
 
-        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
+        ThawDelegatedAccountCpi::new(&metadata_program, cpi_accounts).invoke_signed(signer)?;
+
+        let cpi_program = self.token_program.to_account_info();
+        let cpi_accounts = Revoke {
+            authority: self.user.to_account_info(),
+            source: self.mint_ata.to_account_info(),
+        };
+
+        let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
 
         revoke(cpi_ctx)?;
 

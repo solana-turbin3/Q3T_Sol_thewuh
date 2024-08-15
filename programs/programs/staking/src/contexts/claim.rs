@@ -69,6 +69,8 @@ impl<'info> Claim<'info> {
 
         mint_to(cpi_ctx, self.user_account.points as u64 * 10_u64.pow(self.rewards_mint.decimals as u32))?;
 
+        self.user_account.points = 0;
+
         Ok(())
     }
 
