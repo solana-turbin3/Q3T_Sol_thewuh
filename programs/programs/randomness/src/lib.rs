@@ -88,8 +88,6 @@ impl<'info> ResolveBet<'info> {
     }
 
     pub fn resolve_bet(&mut self, bumps: &ResolveBetBumps, sig: &[u8]) -> Result<()> {
-
-        let sig = Pubkey::new_unique();
         let hash = hash(&sig.as_ref()).to_bytes();
         let mut hash_16: [u8; 16] = [0; 16];
         hash_16.copy_from_slice(&hash[0..16]);

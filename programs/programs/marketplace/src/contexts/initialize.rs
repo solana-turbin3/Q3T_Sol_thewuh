@@ -41,6 +41,24 @@ pub struct Initialize<'info> {
 
 impl<'info> Initialize<'info> {
     pub fn init(&mut self, name: String, fee: u16, bumps: &InitializeBumps) -> Result<()> {
+        require!(
+            name.len() > 0 && name.len() < 33,
+            MarketplaceError::NameTooLong
+        );
+        self.marketplace.set_inner(Marketplace {
+            admin: self.admin.key(),
+            fee,
+            name,
+            bump: bumps.marketplace,
+            treasury_bump: bumps.treasury,
+            rewards_bump: bumps.rewards_mint,
+        });
         Ok(())
     }
+}
+
+#[error_code]
+pub enum MarketplaceError {
+    #[msg("Name must be between 1 and 32 characters")]
+    NameTooLong,
 }
