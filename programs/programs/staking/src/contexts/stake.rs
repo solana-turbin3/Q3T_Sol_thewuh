@@ -37,7 +37,7 @@ pub struct Stake<'info> {
         seeds::program = metadata_program.key(),
         bump,
         constraint=metadata.collection.as_ref().unwrap().key.as_ref() == collection.key().as_ref(),
-        constraint=metadata.collection.as_ref().unwrap().verified == true,
+        constraint=metadata.collection.as_ref().unwrap().verified,
     )]
     pub metadata: Account<'info, MetadataAccount>,
 
