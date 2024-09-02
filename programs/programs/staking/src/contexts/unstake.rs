@@ -34,7 +34,7 @@ pub struct Unstake<'info> {
         ],
         seeds::program = metadata_program.key(),
         bump,
-        constraint=metadata.collection.as_ref().unwrap().verified == true,
+        constraint=metadata.collection.as_ref().unwrap().verified,
     )]
     pub metadata: Account<'info, MetadataAccount>,
 
@@ -122,7 +122,7 @@ impl<'info> Unstake<'info> {
 
         let time_elapsed = ((Clock::get()?.unix_timestamp - self.stake_account.last_updated) / 86400) as u32;
 
-        self.user_account.points += time_elapsed as u32 * self.config.points_per_stake as u32;
+        self.user_account.points += time_elapsed * self.config.points_per_stake as u32;
 
         Ok(())
     }

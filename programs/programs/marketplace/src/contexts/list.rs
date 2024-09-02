@@ -14,7 +14,7 @@ pub struct List<'info> {
     pub maker: Signer<'info>,
 
     #[account(
-        seeds=[b"marketplace", name.as_str().as_bytes()],
+        seeds=[b"marketplace", name.as_bytes()],
         bump
     )]
     pub marketplace: Box<Account<'info, Marketplace>>,
@@ -56,7 +56,7 @@ pub struct List<'info> {
         ],
         seeds::program = metadata_program.key(),
         bump,
-        constraint=metadata.collection.as_ref().unwrap().verified == true,
+        constraint=metadata.collection.as_ref().unwrap().verified,
     )]
     pub metadata: Account<'info, MetadataAccount>,
 
@@ -86,7 +86,7 @@ impl<'info> List<'info> {
         self.listing.set_inner(Listing {
             maker: self.maker.key(),
             mint: self.maker_mint.key(),
-            price: price,
+            price,
             bump: bumps.listing,
         });
 

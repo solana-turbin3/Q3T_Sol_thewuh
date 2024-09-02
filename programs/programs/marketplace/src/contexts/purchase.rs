@@ -22,7 +22,7 @@ pub struct Purchase<'info> {
     pub maker: SystemAccount<'info>,
 
     #[account(
-        seeds=[b"marketplace", name.as_str().as_bytes()],
+        seeds=[b"marketplace", name.as_bytes()],
         bump
     )]
     pub marketplace: Box<Account<'info, Marketplace>>,

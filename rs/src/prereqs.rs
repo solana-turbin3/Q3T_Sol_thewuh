@@ -24,10 +24,10 @@ mod tests {
         // Create a new keypair
         let kp = Keypair::new();
         println!(
-            "You've generated a new Solana wallet: {}",
+            "You've generated a new Solana wallet: {:?}",
             kp.pubkey().to_string()
         );
-        println!("");
+        println!();
         println!("To save your wallet, copy and paste the following into a JSON file:");
         println!("{:?}", kp.to_bytes());
     }
@@ -50,11 +50,11 @@ mod tests {
             Ok(s) => {
                 println!("Success! Check out your TX here:");
                 println!(
-                    "https://explorer.solana.com/tx/{}?cluster=devnet",
+                    "https://explorer.solana.com/tx/{:?}?cluster=devnet",
                     s.to_string()
                 );
             }
-            Err(e) => println!("Oops, something went wrong: {}", e.to_string()),
+            Err(e) => println!("Oops, something went wrong: {:?}", e.to_string()),
         };
     }
     #[test]
@@ -90,7 +90,7 @@ mod tests {
         let transaction = Transaction::new_signed_with_payer(
             &[system_instruction::transfer(
                 &keypair.pubkey(),
-                &to_pubkey,
+                to_pubkey,
                 LAMPORTS_PER_SOL / 10,
             )],
             Some(&keypair.pubkey()),
@@ -114,7 +114,7 @@ mod tests {
             .expect("Failed to get balance");
 
         let message = Message::new_with_blockhash(
-            &[system_instruction::transfer(&keypair.pubkey(), &to_pubkey, balance)],
+            &[system_instruction::transfer(&keypair.pubkey(), to_pubkey, balance)],
             Some(&keypair.pubkey()),
             &recent_blockhash,
         );
@@ -124,7 +124,7 @@ mod tests {
             .expect("Failed to get fee calculator");
 
         let transaction = Transaction::new_signed_with_payer(
-            &[system_instruction::transfer(&keypair.pubkey(), &to_pubkey, balance - fee)],
+            &[system_instruction::transfer(&keypair.pubkey(), to_pubkey, balance - fee)],
             Some(&keypair.pubkey()),
             &vec![&keypair],
             recent_blockhash,
